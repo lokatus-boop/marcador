@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MARCADOR PADEL</title>
+    <title>Mando Pádel LUISMI</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; text-align: center; background-color: #121212; color: white; margin: 0; padding: 20px; touch-action: manipulation; }
         h1 { margin-bottom: 10px; font-size: 1.5rem; }
@@ -11,15 +11,8 @@
         .status.connected { color: #4CAF50; }
         
         button {
-            width: 100%;
-            padding: 15px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s;
+            width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 12px;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: transform 0.1s;
             -webkit-tap-highlight-color: transparent;
         }
         button:active { transform: scale(0.98); }
@@ -29,7 +22,9 @@
         .btn-eq2 { background: #c62828; color: white; height: 80px; font-size: 1.5rem; }
         .btn-restar { background: #424242; color: #aaa; font-size: 0.9rem; width: 48%; display: inline-block; }
         
-        .config-area { margin-top: 30px; padding-top: 20px; border-top: 1px solid #333; }
+        .config-area { margin-top: 30px; padding-top: 20px; border-top: 1px solid #333; text-align: left; }
+        .label-section { color: #888; font-size: 0.8rem; margin-bottom: 5px; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px;}
+        
         .btn-reset { background: #FF9800; color: black; width: 48%; display: inline-block; margin: 1%;}
         .btn-reset-gold { background: #FFC107; border: 2px solid #FF6F00; color: black; width: 48%; display: inline-block; margin: 1%;}
 
@@ -37,22 +32,34 @@
         .btn-serve { background: #333; color: #888; font-size: 0.9rem; width: 48%; border: 1px solid #555; }
         .btn-serve.active { background: #fff; color: #000; border-color: #fff; }
 
+        .input-name { 
+            width: calc(100% - 24px); padding: 12px; margin-bottom: 10px; 
+            background: #222; border: 1px solid #444; color: white; border-radius: 8px; font-size: 1rem;
+        }
+        .btn-update { background: #555; color: white; font-size: 0.9rem; padding: 10px; margin-top: 0;}
+
+        .set-correction { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: #222; padding: 10px; border-radius: 8px;}
+        .set-correction span { font-weight: bold; color: #aaa; font-size: 0.9rem; }
+        .btn-set-adj { width: 40px; height: 40px; padding: 0; margin: 0 5px; font-size: 1.2rem; background: #444; }
+
         #controls { display: none; } 
     </style>
 </head>
 <body>
 
-    <h1>🎾 MARCADOR PADEL</h1>
+    <h1>🎾 MARCADOR PÁDEL</h1>
     <div id="status" class="status">Desconectado</div>
 
     <button id="btnConnect" class="btn-connect">🔗 CONECTAR MARCADOR</button>
 
     <div id="controls">
+        <div class="label-section">Quién Saca</div>
         <div class="serve-area">
             <button id="btnSrv1" class="btn-serve" onclick="setServe(1)">Saca Equipo 1</button>
             <button id="btnSrv2" class="btn-serve" onclick="setServe(2)">Saca Equipo 2</button>
         </div>
 
+        <div class="label-section">Puntuación</div>
         <button class="btn-eq1" onclick="sendCommand('S1')">+ PUNTO EQ 1</button>
         <button class="btn-eq2" onclick="sendCommand('S2')">+ PUNTO EQ 2</button>
 
@@ -62,7 +69,44 @@
         </div>
 
         <div class="config-area">
-            <p style="color:#666; margin-bottom:10px">NUEVO PARTIDO</p>
+            <div class="label-section">Nombres Equipos</div>
+            <input type="text" id="name1" class="input-name" placeholder="Nombre Equipo 1" maxlength="12">
+            <input type="text" id="name2" class="input-name" placeholder="Nombre Equipo 2" maxlength="12">
+            <button class="btn-update" onclick="updateNames()">Actualizar Nombres</button>
+
+            <div class="label-section">Corregir Juegos</div>
+            <div class="set-correction">
+                <span>Juegos Eq 1</span>
+                <div>
+                    <button class="btn-set-adj" onclick="sendCommand('GAME1_DN')">-</button>
+                    <button class="btn-set-adj" onclick="sendCommand('GAME1_UP')">+</button>
+                </div>
+            </div>
+            <div class="set-correction">
+                <span>Juegos Eq 2</span>
+                <div>
+                    <button class="btn-set-adj" onclick="sendCommand('GAME2_DN')">-</button>
+                    <button class="btn-set-adj" onclick="sendCommand('GAME2_UP')">+</button>
+                </div>
+            </div>
+
+            <div class="label-section">Corregir Sets</div>
+            <div class="set-correction">
+                <span>Sets Eq 1</span>
+                <div>
+                    <button class="btn-set-adj" onclick="sendCommand('SET1_DN')">-</button>
+                    <button class="btn-set-adj" onclick="sendCommand('SET1_UP')">+</button>
+                </div>
+            </div>
+            <div class="set-correction">
+                <span>Sets Eq 2</span>
+                <div>
+                    <button class="btn-set-adj" onclick="sendCommand('SET2_DN')">-</button>
+                    <button class="btn-set-adj" onclick="sendCommand('SET2_UP')">+</button>
+                </div>
+            </div>
+
+            <div class="label-section">Nuevo Partido</div>
             <button class="btn-reset" onclick="sendCommand('RESET_V'); clearServeUI()">Clásico</button>
             <button class="btn-reset-gold" onclick="sendCommand('RESET_O'); clearServeUI()">Punto Oro</button>
         </div>
@@ -125,6 +169,14 @@
         function clearServeUI() {
             document.getElementById('btnSrv1').classList.remove('active');
             document.getElementById('btnSrv2').classList.remove('active');
+        }
+
+        function updateNames() {
+            const n1 = document.getElementById('name1').value.trim();
+            const n2 = document.getElementById('name2').value.trim();
+            if(n1) sendCommand('NAM1:' + n1);
+            if(n2) setTimeout(() => sendCommand('NAM2:' + n2), 100);
+            alert("Nombres actualizados");
         }
     </script>
 </body>
